@@ -1,29 +1,26 @@
 from django.contrib import admin
 from django.contrib.auth.admin import UserAdmin
-from users.models import User
+from .models import User
+from django.utils.translation import gettext_lazy as _
 
-# Register your models here.
-
+@admin.register(User)
 class CustomUserAdmin(UserAdmin):
     model = User
-    list_display = ('email', 'first_name', 'last_name', 'is_active')
-    list_filter = ('is_staff', 'is_active')
-
+    # Make sure you include only editable fields
     fieldsets = (
-        (None, {'fields': ('email', 'password')}),
-        ('Personal Info', {'fields': ('first_name',
-         'last_name', 'address', 'phone_number')}),
-        ('Permissions', {'fields': ('is_staff', 'is_active',
-         'is_superuser', 'groups', 'user_permissions')}),
-        ('Important Dates', {'fields': ('last_login', 'date_joined')})
+        (None, {"fields": ("email", "password")}),
+        (_("Personal info"), {"fields": ("first_name", "last_name")}),
+        (_("Permissions"), {"fields": ("is_active", "is_staff", "is_superuser", "groups", "user_permissions")}),
+        (_("Important dates"), {"fields": ("last_login",)}),  # remove 'date_joined'
     )
+
     add_fieldsets = (
         (None, {
-            'classes': ('wide',),
-            'fields': ('email', 'password1', 'password2', 'is_staff', 'is_active')
+            "classes": ("wide",),
+            "fields": ("email", "password1", "password2", "is_staff", "is_active"),
         }),
     )
-    search_fields = ('email',)
-    ordering = ('email',)
 
-admin.site.register(User, CustomUserAdmin)
+    list_display = ("email", "first_name", "last_name", "is_staff", "is_active")
+    search_fields = ("email", "first_name", "last_name")
+    ordering = ("email",)
