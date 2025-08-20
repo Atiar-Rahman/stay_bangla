@@ -1,10 +1,11 @@
 from pathlib import Path
-from datetime import timedelta
+from decouple import config
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 
 # SECURITY WARNING: keep the secret key used in production!
-SECRET_KEY = 'django-insecure-bhn7d5l26)z@bd9efo2*ay2*psiynnvo%%59+no%#5gw9c$bo@'
+SECRET_KEY = config('SECRET_KEY')
+
 AUTH_USER_MODEL = "users.User"
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
@@ -74,7 +75,11 @@ DATABASES = {
     }
 }
 
-
+INTERNAL_IPS = [
+    # ...
+    "127.0.0.1",
+    # ...
+]
 # Password validation
 AUTH_PASSWORD_VALIDATORS = [
     {
@@ -111,24 +116,9 @@ AUTH_USER_MODEL = "users.User"
 
 # Django REST Framework + JWT
 REST_FRAMEWORK = {
+    # Use Django's standard `django.contrib.auth` permissions,
+    # or allow read-only access for unauthenticated users.
     'DEFAULT_PERMISSION_CLASSES': [
-        'rest_framework.permissions.IsAuthenticated',  # default protect all APIs
-    ],
-    'DEFAULT_AUTHENTICATION_CLASSES': (
-        'rest_framework_simplejwt.authentication.JWTAuthentication',
-    ),
-}
-
-SIMPLE_JWT = {
-    "ACCESS_TOKEN_LIFETIME": timedelta(minutes=60),
-    "REFRESH_TOKEN_LIFETIME": timedelta(days=1),
-    "AUTH_HEADER_TYPES": ("Bearer",),
-}
-
-
-# Djoser settings
-DJOSER = {
-    "LOGIN_FIELD": "email",  # use email instead of username
-    "USER_CREATE_PASSWORD_RETYPE": True,
-    "SERIALIZERS": {},  # you can add custom serializers later
+        'rest_framework.permissions.DjangoModelPermissionsOrAnonReadOnly'
+    ]
 }
