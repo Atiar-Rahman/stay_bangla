@@ -116,9 +116,18 @@ AUTH_USER_MODEL = "users.User"
 
 # Django REST Framework + JWT
 REST_FRAMEWORK = {
-    # Use Django's standard `django.contrib.auth` permissions,
-    # or allow read-only access for unauthenticated users.
-    'DEFAULT_PERMISSION_CLASSES': [
-        'rest_framework.permissions.DjangoModelPermissionsOrAnonReadOnly'
-    ]
+    'DEFAULT_AUTHENTICATION_CLASSES': (
+        'rest_framework_simplejwt.authentication.JWTAuthentication',
+    ),
+}
+
+SIMPLE_JWT = {
+   'AUTH_HEADER_TYPES': ('JWT',),
+}
+
+
+DJOSER={
+    'SERIALIZERS':{
+        'user_create':'users.serializers.UserCreateSerializer'
+    }
 }
