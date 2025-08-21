@@ -35,6 +35,13 @@ class HotelRoomViewSet(ModelViewSet):
         room.save()
 
 class HotelImageViewSet(ModelViewSet):
-    queryset = HotelImage.objects.all()
     serializer_class = HotelImageSerializer
     permission_classes = [IsAdminOrReadOnly]
+
+    def get_queryset(self):
+        hotel_id = self.kwargs.get("hotel_pk")   # nested router থেকে আসবে
+        return HotelImage.objects.filter(hotel_id=hotel_id)
+
+    def perform_create(self, serializer):
+        hotel_id = self.kwargs.get("hotel_pk")
+        serializer.save(hotel_id=hotel_id)   

@@ -1,5 +1,6 @@
 from django.db import models
 from django.utils.text import slugify
+from cloudinary.models import CloudinaryField
 # Create your models here.
 class Hotel(models.Model):
     name = models.CharField(max_length=255)
@@ -31,7 +32,7 @@ class Hotel(models.Model):
 
 class HotelImage(models.Model):
     hotel = models.ForeignKey(Hotel, on_delete=models.CASCADE, related_name="images")
-    image = models.ImageField(upload_to="hotels/")
+    image = CloudinaryField('image')
     caption = models.CharField(max_length=255, blank=True, null=True)
     is_featured = models.BooleanField(default=False)
     uploaded_at = models.DateTimeField(auto_now_add=True)

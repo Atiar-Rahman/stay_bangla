@@ -1,6 +1,8 @@
 from django.db import models
 from django.contrib.auth.models import AbstractBaseUser, PermissionsMixin, Group, Permission
 from users.managers import CustomUserManager  # pyright: ignore[reportMissingImports]
+from cloudinary.models import CloudinaryField
+
 
 class User(AbstractBaseUser, PermissionsMixin):
     username = None
@@ -12,7 +14,7 @@ class User(AbstractBaseUser, PermissionsMixin):
     phone_number = models.CharField(max_length=15, blank=True, null=True)
 
     # Optional fields
-    profile_picture = models.ImageField(upload_to="users/", blank=True, null=True)
+    profile_picture = CloudinaryField('image')
     balance = models.DecimalField(max_digits=10, decimal_places=2, default=0.0, blank=True, null=True)
 
     # Admin flags

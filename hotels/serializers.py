@@ -2,15 +2,21 @@ from rest_framework import serializers
 from hotels.models import Hotel, HotelImage, Room
 
 class HotelImageSerializer(serializers.ModelSerializer):
+    hotel_name = serializers.CharField(source="hotel.name", read_only=True)
+    image = serializers.ImageField(required=True)  #file upload field
+
     class Meta:
         model = HotelImage
-        fields = ["id", "hotel", "image", "caption", "is_featured", "uploaded_at"]
-        read_only_fields = ["id", "uploaded_at"]
+        fields = [
+            "id",
+            "hotel_name",   # auto from related hotel
+            "image",        # file upload
+            "caption",
+            "is_featured",
+            "uploaded_at"
+        ]
+        read_only_fields = ["id", "uploaded_at", "hotel_name"]
 
-
-
-from rest_framework import serializers
-from hotels.models import Room
 
 class RoomSerializer(serializers.ModelSerializer):
     class Meta:

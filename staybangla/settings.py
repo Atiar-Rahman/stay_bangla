@@ -1,7 +1,7 @@
 from pathlib import Path
 from decouple import config
 from datetime import timedelta
-
+import cloudinary
 BASE_DIR = Path(__file__).resolve().parent.parent
 
 # SECURITY WARNING: keep the secret key used in production!
@@ -97,6 +97,14 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
+#cloudinary configuration
+cloudinary.config( 
+  cloud_name = config('cloud_name'), 
+  api_key = config('cloudinary_api_key'), 
+  api_secret = config('api_secret'),
+)
+# media storage setting
+DEFULD_FILE_STORAGE='cloudinary_storage.storage.MediaClouinaryStorage'
 
 # Internationalization
 LANGUAGE_CODE = 'en-us'
@@ -107,7 +115,9 @@ USE_TZ = True
 
 # Static files
 STATIC_URL = 'static/'
-
+# setting add for media file
+MEDIA_URL = '/media/'
+MEDIA_ROOT = BASE_DIR/'media'
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 
@@ -117,6 +127,7 @@ AUTH_USER_MODEL = "users.User"
 
 # Django REST Framework + JWT
 REST_FRAMEWORK = {
+    'COERCE_DECIMAL_TO_STRING':False,
     'DEFAULT_AUTHENTICATION_CLASSES': (
         'rest_framework_simplejwt.authentication.JWTAuthentication',
     ),
@@ -129,8 +140,29 @@ SIMPLE_JWT = {
 }
 
 
-DJOSER={
+DJOSER ={
+    'PASSWORD_RESET_CONFIRM_URL': 'password/reset/confirm/{uid}/{token}',
+    'ACTIVATION_URL': 'activate/{uid}/{token}',
+    'SEND_ACTIVATION_EMAIL': True,
     'SERIALIZERS':{
-        'user_create':'users.serializers.UserCreateSerializer'
+        'user_create': 'users.serializers.UserCreateSerializer',
+        'current_user': 'users.serializers.UserSerializer'
     }
 }
+SWAGGER_SETTINGS = {
+   'SECURITY_DEFINITIONS': {
+      'Bearer': {
+            'type': 'apiKey',
+            'name': 'Authorization',
+            'in': 'header',
+            'description':'Enter your JWT token in the format: `JWT <your token>`'
+      }
+   }
+}
+
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_HOST = config('EMAIL_HOST')
+EMAIL_USE_TLS = config('EMAIL_USE_TLS', cast=bool)
+EMAIL_PORT = config('EMAIL_PORT')
+EMAIL_HOST_USER = config('EMAIL_HOST_USER')
+EMAIL_HOST_PASSWORD = config('EMAIL_HOST_PASSWORD')
