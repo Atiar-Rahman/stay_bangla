@@ -117,7 +117,7 @@ cloudinary.config(
   api_secret = config('api_secret'),
 )
 # media storage setting
-DEFULD_FILE_STORAGE='cloudinary_storage.storage.MediaClouinaryStorage'
+DEFAULT_FILE_STORAGE = "cloudinary_storage.storage.MediaCloudinaryStorage"
 
 # Internationalization
 LANGUAGE_CODE = 'en-us'
