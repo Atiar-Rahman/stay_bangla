@@ -9,9 +9,9 @@ SECRET_KEY = config('SECRET_KEY')
 
 AUTH_USER_MODEL = "users.User"
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = False
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['.vercel.app','127.0.0.1']
 
 
 # Application definition
@@ -67,16 +67,27 @@ TEMPLATES = [
     },
 ]
 
-WSGI_APPLICATION = 'staybangla.wsgi.application'
+WSGI_APPLICATION = 'staybangla.wsgi.app'
 
 
-# Database
+# # Database
+# DATABASES = {
+#     'default': {
+#         'ENGINE': 'django.db.backends.sqlite3',   # replace with PostgreSQL later if needed
+#         'NAME': BASE_DIR / 'db.sqlite3',
+#     }
+# }
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',   # replace with PostgreSQL later if needed
-        'NAME': BASE_DIR / 'db.sqlite3',
+        'ENGINE': 'django.db.backends.postgresql',
+        'NAME': config('dbname'),
+        'USER': config('user'),
+        'PASSWORD': config('password'),
+        'HOST': config('host'),
+        'PORT': config('port')
     }
 }
+
 
 INTERNAL_IPS = [
     # ...
