@@ -1,11 +1,14 @@
 from django.db import models
+from django.core.validators import MinValueValidator, MaxValueValidator
 from users.models import User
 from hotels.models import Hotel
-# Create your models here.
+
 class Review(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE, related_name="reviews")
     hotel = models.ForeignKey(Hotel, on_delete=models.CASCADE, related_name="reviews")
-    rating = models.PositiveIntegerField()
+    rating = models.PositiveIntegerField(
+        validators=[MinValueValidator(1), MaxValueValidator(5)]
+    )
     title = models.CharField(max_length=100, blank=True, null=True)
     comment = models.TextField()
     image = models.ImageField(upload_to="review_images/", blank=True, null=True)

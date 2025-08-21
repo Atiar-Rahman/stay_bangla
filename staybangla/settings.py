@@ -1,5 +1,6 @@
 from pathlib import Path
 from decouple import config
+from datetime import timedelta
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 
@@ -123,6 +124,8 @@ REST_FRAMEWORK = {
 
 SIMPLE_JWT = {
    'AUTH_HEADER_TYPES': ('JWT',),
+   "ACCESS_TOKEN_LIFETIME": timedelta(hours=12),  # default: 5 minutes, now 12 hours
+    "REFRESH_TOKEN_LIFETIME": timedelta(days=7),   # default: 1 day, now 7 days
 }
 
 
