@@ -67,7 +67,7 @@ TEMPLATES = [
     },
 ]
 
-WSGI_APPLICATION = 'staybangla.wsgi.app'
+WSGI_APPLICATION = 'staybangla.wsgi.application'
 
 
 # # Database
