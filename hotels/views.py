@@ -2,6 +2,8 @@ from rest_framework.viewsets import ModelViewSet
 from hotels.models import Hotel,Room,HotelImage
 from hotels.serializers import HotelSerializer,RoomSerializer,HotelImageSerializer
 from hotels.permissions import IsAdminOrReadOnly
+from rest_framework.filters import SearchFilter,OrderingFilter
+from django_filters.rest_framework import DjangoFilterBackend
 
 class HotelViewSet(ModelViewSet):
     """
@@ -15,7 +17,9 @@ class HotelViewSet(ModelViewSet):
 class HotelRoomViewSet(ModelViewSet):
     serializer_class = RoomSerializer
     permission_classes = [IsAdminOrReadOnly]
-
+    filter_backends = [DjangoFilterBackend,SearchFilter,OrderingFilter]
+    search_fields = ['room_type'] #search name add korte hobe
+    ordering_fields = ['price','updated_at'] #for order korer jonno
     def get_queryset(self):
         hotel_id = self.kwargs['hotel_pk']
         return Room.objects.filter(hotel_id=hotel_id)
