@@ -3,7 +3,7 @@ from hotels.models import Hotel, HotelImage, Room
 
 class HotelImageSerializer(serializers.ModelSerializer):
     hotel_name = serializers.CharField(source="hotel.name", read_only=True)
-    image = serializers.ImageField(required=True)  #file upload field
+    image = serializers.ImageField(required=False,allow_null=True) 
 
     class Meta:
         model = HotelImage
@@ -12,10 +12,18 @@ class HotelImageSerializer(serializers.ModelSerializer):
             "hotel_name",   # auto from related hotel
             "image",        # file upload
             "caption",
+            "description",
             "is_featured",
             "uploaded_at"
         ]
         read_only_fields = ["id", "uploaded_at", "hotel_name"]
+    
+    def update(self, instance, validated_data):
+        # only update image if provided
+        image = validated_data.pop("image", None)
+        if image:
+            instance.image = image
+        return super().update(instance, validated_data)
 
 
 class RoomSerializer(serializers.ModelSerializer):
