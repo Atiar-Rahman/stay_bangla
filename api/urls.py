@@ -29,4 +29,6 @@ urlpatterns = [
     path("", include(room_router.urls)),
     path("", include(booking_router.urls)),
     path("", include(image_router.urls)),
+    path('auth/',include('djoser.urls')),
+    path('auth/',include('djoser.urls.jwt')),
 ]

@@ -13,7 +13,9 @@ DEBUG = False
 
 ALLOWED_HOSTS = ['.vercel.app','127.0.0.1']
 
-
+CORS_ALLOWED_ORIGINS = [
+    "http://localhost:5173",
+]
 # Application definition
 INSTALLED_APPS = [
     "whitenoise.runserver_nostatic",
@@ -24,6 +26,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'drf_yasg',
+    "corsheaders",
     # 3rd party
     "debug_toolbar",
     'rest_framework',
@@ -43,6 +46,7 @@ MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     "whitenoise.middleware.WhiteNoiseMiddleware",
     'django.contrib.sessions.middleware.SessionMiddleware',
+    "corsheaders.middleware.CorsMiddleware",
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
@@ -156,15 +160,13 @@ SIMPLE_JWT = {
 }
 
 
-DJOSER ={
-    'PASSWORD_RESET_CONFIRM_URL': 'password/reset/confirm/{uid}/{token}',
-    'ACTIVATION_URL': 'activate/{uid}/{token}',
-    'SEND_ACTIVATION_EMAIL': True,
-    'SERIALIZERS':{
-        'user_create': 'users.serializers.UserCreateSerializer',
-        'current_user': 'users.serializers.UserSerializer'
-    }
+DJOSER = {
+    'SERIALIZERS': {
+        'user_create':'users.serializers.UserCreateSerializer',
+        'current_user':'users.serializers.UserSerializer'
+        },
 }
+
 SWAGGER_SETTINGS = {
    'SECURITY_DEFINITIONS': {
       'Bearer': {

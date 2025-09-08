@@ -21,7 +21,7 @@ class HotelRoomViewSet(ModelViewSet):
     search_fields = ['room_type'] #search name add korte hobe
     ordering_fields = ['price','updated_at'] #for order korer jonno
     def get_queryset(self):
-        hotel_id = self.kwargs['hotel_pk']
+        hotel_id = self.kwargs.get('hotel_pk')
         return Room.objects.filter(hotel_id=hotel_id)
 
     def get_serializer_context(self):
