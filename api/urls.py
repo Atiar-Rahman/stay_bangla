@@ -3,12 +3,15 @@ from hotels.views import HotelViewSet, HotelRoomViewSet, HotelImageViewSet
 from booking.views import HotelBookingViewSet,BookingViewSet,BookingAdminViewSet
 from reviews.views import ReviewViewSet
 from django.urls import path, include
+from users.views import UserViewSet
 
 # Main router
 router = routers.DefaultRouter()
 router.register('hotels', HotelViewSet)
 # Normal user bookings
 router.register("bookings", BookingViewSet, basename="bookings")
+# for user route
+router.register("users", UserViewSet, basename="users")
 
 # Admin bookings
 router.register("admin/bookings", BookingAdminViewSet, basename="admin-bookings")
