@@ -9,9 +9,9 @@ class CustomUserAdmin(UserAdmin):
     # Make sure you include only editable fields
     fieldsets = (
         (None, {"fields": ("email", "password")}),
-        (_("Personal info"), {"fields": ("first_name", "last_name")}),
+        (_("Personal info"), {"fields": ("first_name", "last_name","phone_number")}),
         (_("Permissions"), {"fields": ("is_active","is_supervisor", "is_staff", "is_superuser", "groups", "user_permissions")}),
-        (_("Important dates"), {"fields": ("last_login",)}),  # remove 'date_joined'
+        (_("Important dates"), {"fields": ("last_login",)}),  
     )
 
     add_fieldsets = (

@@ -1,12 +1,17 @@
 from rest_framework_nested import routers
 from hotels.views import HotelViewSet, HotelRoomViewSet, HotelImageViewSet
-from booking.views import BookingViewSet
+from booking.views import HotelBookingViewSet,BookingViewSet,BookingAdminViewSet
 from reviews.views import ReviewViewSet
 from django.urls import path, include
 
 # Main router
 router = routers.DefaultRouter()
 router.register('hotels', HotelViewSet)
+# Normal user bookings
+router.register("bookings", BookingViewSet, basename="bookings")
+
+# Admin bookings
+router.register("admin/bookings", BookingAdminViewSet, basename="admin-bookings")
 
 # Nested router for rooms under hotels
 room_router = routers.NestedSimpleRouter(router, 'hotels', lookup='hotel')
@@ -18,7 +23,7 @@ room_router.register('reviews', ReviewViewSet, basename='hotel-review')
 
 # Nested router for bookings under rooms (room-level booking)
 booking_router = routers.NestedSimpleRouter(room_router, 'rooms', lookup='room')
-booking_router.register('bookings', BookingViewSet, basename='room-booking')
+booking_router.register('bookings', HotelBookingViewSet, basename='room-booking')
 
 # Nested router for images under rooms
 image_router = routers.NestedSimpleRouter(room_router, 'rooms', lookup='room')
