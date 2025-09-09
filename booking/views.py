@@ -145,6 +145,7 @@ def initiate_payment(request):
     user = request.user
     amount = request.data.get("amount")
     num_rooms = request.data.get("num_rooms")
+    booking_id = request.data.get('booking_id')
     print(user)
     print(amount)
     print(num_rooms)
@@ -154,7 +155,7 @@ def initiate_payment(request):
     post_body = {}
     post_body['total_amount'] = amount
     post_body['currency'] = "BDT"
-    post_body['tran_id'] = f'txn_{tran_id}'
+    post_body['tran_id'] = f'txn_{tran_id}_{booking_id}'
     post_body['success_url'] = f"{main_settings.BACKEND_URL}/api/v1/payment/success/"
     post_body['fail_url'] = f"{main_settings.BACKEND_URL}/api/v1/payment/fail/"
     post_body['cancel_url'] = f"{main_settings.BACKEND_URL}/api/v1/payment/cancel/"
@@ -193,7 +194,7 @@ def payment_success(request):
     except Booking.DoesNotExist:
         pass  # optionally log
 
-    return HttpResponseRedirect(f"{main_settings.FRONTEND_URL}/dashboard/bookings/")
+    return HttpResponseRedirect(f"{main_settings.FRONTEND_URL}/dashboard/showbooking/")
 
 # Payment cancel
 @api_view(['POST'])
@@ -202,12 +203,12 @@ def payment_cancel(request):
     booking_id = tran_id.split("_")[-1]
     try:
         booking = Booking.objects.get(id=booking_id)
-        booking.status = "cancelled"
+        booking.status = "pending"
         booking.save()
     except Booking.DoesNotExist:
         pass
 
-    return HttpResponseRedirect(f"{main_settings.FRONTEND_URL}/dashboard/bookings/")
+    return HttpResponseRedirect(f"{main_settings.FRONTEND_URL}/dashboard/showbooking/")
 
 # Payment fail
 @api_view(['POST'])
@@ -221,4 +222,4 @@ def payment_fail(request):
     except Booking.DoesNotExist:
         pass
 
-    return HttpResponseRedirect(f"{main_settings.FRONTEND_URL}/dashboard/bookings/")
+    return HttpResponseRedirect(f"{main_settings.FRONTEND_URL}/dashboard/showbooking/")
