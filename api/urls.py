@@ -1,6 +1,6 @@
 from rest_framework_nested import routers
 from hotels.views import HotelViewSet, HotelRoomViewSet, HotelImageViewSet
-from booking.views import HotelBookingViewSet,BookingViewSet,BookingAdminViewSet
+from booking.views import HotelBookingViewSet,BookingViewSet,BookingAdminViewSet,initiate_payment,payment_success,payment_fail,payment_cancel
 from reviews.views import ReviewViewSet
 from django.urls import path, include
 from users.views import UserViewSet
@@ -39,4 +39,8 @@ urlpatterns = [
     path("", include(image_router.urls)),
     path('auth/',include('djoser.urls')),
     path('auth/',include('djoser.urls.jwt')),
+    path("payment/initiate/", initiate_payment, name="initiate-payment"),
+    path("payment/success/", payment_success, name="payment-success"),
+    path("payment/fail/", payment_fail, name="payment-fail"),
+    path("payment/cancel/", payment_cancel, name="payment-cancel"),
 ]

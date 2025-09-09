@@ -71,7 +71,7 @@ class BookingSerializer(serializers.ModelSerializer):
             room=room,
             amount=amount,
             booking_reference=booking_reference,
-            status="confirmed",
+            status="pending",
             **validated_data
         )
 

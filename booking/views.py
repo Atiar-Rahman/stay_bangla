@@ -1,3 +1,4 @@
+from django.http import HttpResponseRedirect
 from rest_framework.viewsets import ModelViewSet
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.decorators import action
@@ -7,6 +8,11 @@ from hotels.models import Hotel
 from .serializers import BookingSerializer
 from rest_framework.viewsets import ReadOnlyModelViewSet
 from rest_framework.permissions import IsAdminUser
+from sslcommerz_lib import SSLCOMMERZ 
+from rest_framework.decorators import api_view
+import random
+from django.conf import settings as main_settings
+from rest_framework import status
 
 
 class HotelBookingViewSet(ModelViewSet):
@@ -126,3 +132,93 @@ class BookingAdminViewSet(ModelViewSet):
             room.save()
 
         return Response(self.get_serializer(booking).data, status=200)
+    
+    
+
+
+# payment all views
+
+@api_view(['POST'])
+def initiate_payment(request):
+    
+    # collect data
+    user = request.user
+    amount = request.data.get("amount")
+    num_rooms = request.data.get("num_rooms")
+    print(user)
+    print(amount)
+    print(num_rooms)
+    tran_id = str(random.randint(10**9, 10**10 - 1))
+    settings = { 'store_id': 'phima67ddc8dba290b', 'store_pass': 'phima67ddc8dba290b@ssl', 'issandbox': True }
+    sslcz = SSLCOMMERZ(settings)
+    post_body = {}
+    post_body['total_amount'] = amount
+    post_body['currency'] = "BDT"
+    post_body['tran_id'] = f'txn_{tran_id}'
+    post_body['success_url'] = f"{main_settings.BACKEND_URL}/api/v1/payment/success/"
+    post_body['fail_url'] = f"{main_settings.BACKEND_URL}/api/v1/payment/fail/"
+    post_body['cancel_url'] = f"{main_settings.BACKEND_URL}/api/v1/payment/cancel/"
+    post_body['emi_option'] = 0
+    post_body['cus_name'] = f'{user.first_name} {user.last_name}'
+    post_body['cus_email'] = user.email
+    post_body['cus_phone'] = user.phone_number
+    post_body['cus_add1'] = "customer address"
+    post_body['cus_city'] = "Dhaka"
+    post_body['cus_country'] = "Bangladesh"
+    post_body['shipping_method'] = "NO"
+    post_body['multi_card_name'] = ""
+    post_body['num_of_item'] = num_rooms
+    post_body['product_name'] = "Hotel Room booking"
+    post_body['product_category'] = "restrudant"
+    post_body['product_profile'] = "general"
+
+
+    response = sslcz.createSession(post_body) # API response
+    print(response)
+    # Need to redirect user to response['GatewayPageURL']
+    if response.get("status") == 'SUCCESS':
+        return Response({"payment_url": response['GatewayPageURL']})
+    return Response({"error": "Payment initiation failed"}, status=status.HTTP_400_BAD_REQUEST)
+
+
+# Payment success
+@api_view(['POST'])
+def payment_success(request):
+    tran_id = request.data.get("tran_id")  # txn_<random>_<booking_id>
+    booking_id = tran_id.split("_")[-1]
+    try:
+        booking = Booking.objects.get(id=booking_id)
+        booking.status = "confirmed"
+        booking.save()
+    except Booking.DoesNotExist:
+        pass  # optionally log
+
+    return HttpResponseRedirect(f"{main_settings.FRONTEND_URL}/dashboard/bookings/")
+
+# Payment cancel
+@api_view(['POST'])
+def payment_cancel(request):
+    tran_id = request.data.get("tran_id")
+    booking_id = tran_id.split("_")[-1]
+    try:
+        booking = Booking.objects.get(id=booking_id)
+        booking.status = "cancelled"
+        booking.save()
+    except Booking.DoesNotExist:
+        pass
+
+    return HttpResponseRedirect(f"{main_settings.FRONTEND_URL}/dashboard/bookings/")
+
+# Payment fail
+@api_view(['POST'])
+def payment_fail(request):
+    tran_id = request.data.get("tran_id")
+    booking_id = tran_id.split("_")[-1]
+    try:
+        booking = Booking.objects.get(id=booking_id)
+        booking.status = "failed"
+        booking.save()
+    except Booking.DoesNotExist:
+        pass
+
+    return HttpResponseRedirect(f"{main_settings.FRONTEND_URL}/dashboard/bookings/")
