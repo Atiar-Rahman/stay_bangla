@@ -1,3 +1,4 @@
+from django.shortcuts import get_object_or_404
 from rest_framework.viewsets import ModelViewSet
 from hotels.models import Hotel,Room,HotelImage
 from hotels.serializers import HotelSerializer,RoomSerializer,HotelImageSerializer
@@ -44,8 +45,11 @@ class HotelImageViewSet(ModelViewSet):
 
     def get_queryset(self):
         hotel_id = self.kwargs.get("hotel_pk")   # nested router থেকে আসবে
+        print(hotel_id)
         return HotelImage.objects.filter(hotel_id=hotel_id)
+       
 
     def perform_create(self, serializer):
-        hotel_id = self.kwargs.get("hotel_pk")
-        serializer.save(hotel_id=hotel_id)   
+        hotel = get_object_or_404(Hotel, pk=self.kwargs.get("hotel_pk"))
+        print(hotel)
+        serializer.save(hotel=hotel)

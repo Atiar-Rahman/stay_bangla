@@ -28,10 +28,9 @@ room_router.register('reviews', ReviewViewSet, basename='hotel-review')
 booking_router = routers.NestedSimpleRouter(room_router, 'rooms', lookup='room')
 booking_router.register('bookings', HotelBookingViewSet, basename='room-booking')
 
-# Nested router for images under rooms
-image_router = routers.NestedSimpleRouter(room_router, 'rooms', lookup='room')
-image_router.register('images', HotelImageViewSet, basename='room-image')
-
+# Nested router for images under hotels (hotel-level images)
+image_router = routers.NestedSimpleRouter(router, 'hotels', lookup='hotel')
+image_router.register('images', HotelImageViewSet, basename='hotel-image')
 urlpatterns = [
     path("", include(router.urls)),
     path("", include(room_router.urls)),

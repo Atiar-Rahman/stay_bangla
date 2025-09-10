@@ -33,18 +33,14 @@ class Hotel(models.Model):
 class HotelImage(models.Model):
     hotel = models.ForeignKey(Hotel, on_delete=models.CASCADE, related_name="images")
     image = CloudinaryField('image')
-    caption = models.CharField(max_length=255, blank=True, null=True)
-    is_featured = models.BooleanField(default=False)
-    uploaded_at = models.DateTimeField(auto_now_add=True)
-    description = models.TextField(blank=True,null=True)
+    
 
     def __str__(self):
-        return f"{self.hotel.name} Image"
-    class Meta:
-        ordering = ["-is_featured", "-uploaded_at"]
-        verbose_name = "Hotel Image"
-        verbose_name_plural = "Hotel Images"
-    
+        return f"{self.hotel.name}"
+
+        
+        
+        
 class Room(models.Model):
     ROOM_TYPES = [
         ("single", "Single"),
