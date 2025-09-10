@@ -3,7 +3,7 @@ from hotels.views import HotelViewSet, HotelRoomViewSet, HotelImageViewSet
 from booking.views import HotelBookingViewSet,BookingViewSet,BookingAdminViewSet,initiate_payment,payment_success,payment_fail,payment_cancel
 from reviews.views import ReviewViewSet
 from django.urls import path, include
-from users.views import UserViewSet
+from users.views import UserViewSet,ContactViewSet
 
 # Main router
 router = routers.DefaultRouter()
@@ -16,13 +16,17 @@ router.register("users", UserViewSet, basename="users")
 # Admin bookings
 router.register("admin/bookings", BookingAdminViewSet, basename="admin-bookings")
 
+# contact information router
+router.register("contacts", ContactViewSet, basename="contacts")
+
+
 # Nested router for rooms under hotels
 room_router = routers.NestedSimpleRouter(router, 'hotels', lookup='hotel')
 room_router.register('rooms', HotelRoomViewSet, basename='hotel-room')
 
 # for review nested router(hotel-> review)
 review_router = routers.NestedSimpleRouter(router, 'hotels', lookup='hotel')
-room_router.register('reviews', ReviewViewSet, basename='hotel-review')
+review_router.register('reviews', ReviewViewSet, basename='hotel-review')
 
 # Nested router for bookings under rooms (room-level booking)
 booking_router = routers.NestedSimpleRouter(room_router, 'rooms', lookup='room')
