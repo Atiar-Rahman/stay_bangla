@@ -32,9 +32,19 @@ class HotelBookingViewSet(ModelViewSet):
     def get_serializer_context(self):
         context = super().get_serializer_context()
         hotel_id = self.kwargs.get("hotel_pk")
-        context["hotel"] = Hotel.objects.get(id=hotel_id)
+        
+        # Only try to fetch hotel if hotel_id exists
+        if hotel_id:
+            try:
+                context["hotel"] = Hotel.objects.get(id=hotel_id)
+            except Hotel.DoesNotExist:
+                context["hotel"] = None
+        else:
+            context["hotel"] = None
+        
         context["user"] = self.request.user
         return context
+
 
     def perform_create(self, serializer):
         serializer.save(user=self.request.user)
@@ -67,8 +77,17 @@ class BookingViewSet(ModelViewSet):
     permission_classes = [IsAuthenticated]
 
     def get_queryset(self):
+        # Swagger / fake view support
+        if getattr(self, 'swagger_fake_view', False):
+            return Booking.objects.none()
+
+        # Return empty if user is not authenticated
+        if not self.request.user.is_authenticated:
+            return Booking.objects.none()
+
         # User can see only their own bookings
         return Booking.objects.filter(user=self.request.user)
+
 
     def get_serializer_context(self):
         context = super().get_serializer_context()
@@ -146,9 +165,9 @@ def initiate_payment(request):
     amount = request.data.get("amount")
     num_rooms = request.data.get("num_rooms")
     booking_id = request.data.get('booking_id')
-    print(user)
-    print(amount)
-    print(num_rooms)
+    # print(user)
+    # print(amount)
+    # print(num_rooms)
     tran_id = str(random.randint(10**9, 10**10 - 1))
     settings = { 'store_id': 'phima67ddc8dba290b', 'store_pass': 'phima67ddc8dba290b@ssl', 'issandbox': True }
     sslcz = SSLCOMMERZ(settings)

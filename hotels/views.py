@@ -45,7 +45,7 @@ class HotelImageViewSet(ModelViewSet):
 
     def get_queryset(self):
         hotel_id = self.kwargs.get("hotel_pk")   # nested router থেকে আসবে
-        print(hotel_id)
+        # print(hotel_id)
         return HotelImage.objects.filter(hotel_id=hotel_id)
        
 
