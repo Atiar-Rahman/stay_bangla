@@ -2,14 +2,14 @@ from pathlib import Path
 from decouple import config
 from datetime import timedelta
 import cloudinary
+from corsheaders.defaults import default_headers
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 
 # SECURITY
 SECRET_KEY = config('SECRET_KEY')
 DEBUG = False
-ALLOWED_HOSTS = ['.vercel.app', '127.0.0.1']
-
+ALLOWED_HOSTS = ['.vercel.app', '127.0.0.1', 'localhost']
 
 # Applications
 INSTALLED_APPS = [
@@ -20,12 +20,14 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+
+    # Third-party
+    "corsheaders",
     'drf_yasg',
-    "debug_toolbar",
     'rest_framework',
     'djoser',
     'django_filters',
-    "corsheaders",
+
     # Local apps
     'booking',
     'reviews',
@@ -34,11 +36,10 @@ INSTALLED_APPS = [
     'users',
 ]
 
-# Middleware
+# Middleware (⚡ fixed order)
 MIDDLEWARE = [
-    "corsheaders.middleware.CorsMiddleware",
-    "debug_toolbar.middleware.DebugToolbarMiddleware",
     'django.middleware.security.SecurityMiddleware',
+    "corsheaders.middleware.CorsMiddleware",   # must come early
     "whitenoise.middleware.WhiteNoiseMiddleware",
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
@@ -69,12 +70,14 @@ WSGI_APPLICATION = 'staybangla.wsgi.app'
 
 # CORS
 CORS_ALLOWED_ORIGINS = [
-    "http://localhost:5173",  # local vite
-    "http://127.0.0.1:5173",  # sometimes vite uses 127
-    "https://stay-bangla-atiars-projects.vercel.app",  # your deployed backend
-    "https://stay-bangla-mk4p.vercel.app",  # your deployed frontend
+    "http://localhost:5173",       # local vite
+    "http://127.0.0.1:5173",       # sometimes vite uses 127
+    "https://stay-bangla-mk4p.vercel.app",  # deployed frontend
 ]
 CORS_ALLOW_CREDENTIALS = True
+CORS_ALLOW_HEADERS = list(default_headers) + [
+    "authorization",
+]
 
 # Database (PostgreSQL)
 DATABASES = {
@@ -97,10 +100,10 @@ AUTH_PASSWORD_VALIDATORS = [
 ]
 
 # Cloudinary
-cloudinary.config( 
-  cloud_name = config('cloud_name'), 
-  api_key = config('cloudinary_api_key'), 
-  api_secret = config('api_secret'),
+cloudinary.config(
+  cloud_name=config('cloud_name'),
+  api_key=config('cloudinary_api_key'),
+  api_secret=config('api_secret'),
 )
 DEFAULT_FILE_STORAGE = "cloudinary_storage.storage.MediaCloudinaryStorage"
 
@@ -112,10 +115,7 @@ USE_TZ = True
 
 # Static and Media
 STATIC_URL = '/static/'
-
-#  white noise add 
 STATIC_ROOT = BASE_DIR / "staticfiles"
-
 STATICFILES_STORAGE = "whitenoise.storage.CompressedStaticFilesStorage"
 
 MEDIA_URL = '/media/'
@@ -139,23 +139,23 @@ SIMPLE_JWT = {
     "ACCESS_TOKEN_LIFETIME": timedelta(hours=12),
 }
 
-
-# Swagger api authentication setting
+# Swagger authentication setting
 SWAGGER_SETTINGS = {
    'SECURITY_DEFINITIONS': {
       'Bearer': {
             'type': 'apiKey',
             'name': 'Authorization',
             'in': 'header',
-            'description':'Enter your JWT token in the format: `JWT <your token>`'
+            'description': 'Enter your JWT token in the format: `JWT <your token>`'
       }
    }
 }
+
 # Djoser
 DJOSER = {
     'SERIALIZERS': {
-        'user_create':'users.serializers.UserCreateSerializer',
-        'current_user':'users.serializers.UserSerializer'
+        'user_create': 'users.serializers.UserCreateSerializer',
+        'current_user': 'users.serializers.UserSerializer'
     },
 }
 
