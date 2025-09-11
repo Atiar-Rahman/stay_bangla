@@ -70,6 +70,7 @@ WSGI_APPLICATION = 'staybangla.wsgi.app'
 # CORS
 CORS_ALLOWED_ORIGINS = [
     "http://localhost:5173",
+    'https://stay-bangla-mk4p.vercel.app',
 ]
 CORS_ALLOW_CREDENTIALS = True
 
