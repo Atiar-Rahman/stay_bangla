@@ -14,6 +14,7 @@ ALLOWED_HOSTS = ['.vercel.app', '127.0.0.1']
 # Applications
 INSTALLED_APPS = [
     "whitenoise.runserver_nostatic",
+    "corsheaders",
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -22,7 +23,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'drf_yasg',
     'django_filters',
-    "corsheaders",
+    
     'rest_framework',
     'djoser',
     # Local apps
