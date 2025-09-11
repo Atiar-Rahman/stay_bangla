@@ -2,7 +2,6 @@ from pathlib import Path
 from decouple import config
 from datetime import timedelta
 import cloudinary
-from corsheaders.defaults import default_headers
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 
@@ -37,21 +36,17 @@ INSTALLED_APPS = [
 
 # Middleware
 MIDDLEWARE = [
+    "debug_toolbar.middleware.DebugToolbarMiddleware",
     'django.middleware.security.SecurityMiddleware',
-    'corsheaders.middleware.CorsMiddleware',  # ✅ MUST come just after SecurityMiddleware
-    'whitenoise.middleware.WhiteNoiseMiddleware',
-
+    "corsheaders.middleware.CorsMiddleware",
+    "whitenoise.middleware.WhiteNoiseMiddleware",
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
-
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
-
-    'debug_toolbar.middleware.DebugToolbarMiddleware',  # ✅ Should go LAST
 ]
-
 
 ROOT_URLCONF = 'staybangla.urls'
 
@@ -74,14 +69,11 @@ WSGI_APPLICATION = 'staybangla.wsgi.app'
 
 # CORS
 CORS_ALLOWED_ORIGINS = [
-    "http://localhost:5173",  # your Vite frontend
-    "https://stay-bangla-mk4p.vercel.app",  # your production frontend
+    "http://localhost:5173",  # local vite
+    "http://127.0.0.1:5173",  # sometimes vite uses 127
+    "https://stay-bangla-mk4p.vercel.app",  # your deployed frontend
 ]
-
 CORS_ALLOW_CREDENTIALS = True
-CORS_ALLOW_HEADERS = list(default_headers) + [
-    'Authorization',
-]
 
 # Database (PostgreSQL)
 DATABASES = {
