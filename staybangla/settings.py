@@ -21,17 +21,17 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'drf_yasg',
-    "debug_toolbar",
+    'django_filters',
     "corsheaders",
     'rest_framework',
     'djoser',
-    'django_filters',
     # Local apps
     'booking',
     'reviews',
     'hotels',
     'api',
     'users',
+    "debug_toolbar",
 ]
 
 # Middleware
@@ -69,7 +69,7 @@ WSGI_APPLICATION = 'staybangla.wsgi.app'
 
 CORS_ALLOWED_ORIGINS = [
     "http://localhost:5173",
-    "https://stay-bangla-mk4p.vercel.app",
+    # "https://stay-bangla-mk4p.vercel.app",
 ]
 
 # Database (PostgreSQL)
