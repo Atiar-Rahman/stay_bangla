@@ -67,10 +67,13 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'staybangla.wsgi.app'
 
+# settings.py
 CORS_ALLOWED_ORIGINS = [
-    "http://localhost:5173",
-    # "https://stay-bangla-mk4p.vercel.app",
+    "http://localhost:5173",                     # dev frontend
+    "https://stay-bangla-mk4p.vercel.app",      # production frontend
 ]
+CORS_ALLOW_CREDENTIALS = True  # if sending JWT in headers/cookies
+
 
 # Database (PostgreSQL)
 DATABASES = {
