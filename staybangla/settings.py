@@ -127,6 +127,18 @@ SIMPLE_JWT = {
     "ACCESS_TOKEN_LIFETIME": timedelta(hours=12),
 }
 
+
+# Swagger api authentication setting
+SWAGGER_SETTINGS = {
+   'SECURITY_DEFINITIONS': {
+      'Bearer': {
+            'type': 'apiKey',
+            'name': 'Authorization',
+            'in': 'header',
+            'description':'Enter your JWT token in the format: `JWT <your token>`'
+      }
+   }
+}
 # Djoser
 DJOSER = {
     'SERIALIZERS': {
