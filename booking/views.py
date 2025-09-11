@@ -37,7 +37,7 @@ class HotelBookingViewSet(ModelViewSet):
         return context
 
     def perform_create(self, serializer):
-        serializer.save()
+        serializer.save(user=self.request.user)
 
 
     @action(detail=True, methods=["get","post"], url_path="cancel")
