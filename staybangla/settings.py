@@ -69,10 +69,13 @@ WSGI_APPLICATION = 'staybangla.wsgi.app'
 
 # CORS
 CORS_ALLOWED_ORIGINS = [
-    "http://localhost:5173",
-    'https://stay-bangla-mk4p.vercel.app',
+    "http://localhost:5173",  # local vite
+    "http://127.0.0.1:5173",  # sometimes vite uses 127
+    "https://stay-bangla-atiars-projects.vercel.app",  # your deployed backend
+    "https://stay-bangla-mk4p.vercel.app",  # your deployed frontend
 ]
 CORS_ALLOW_CREDENTIALS = True
+
 # Database (PostgreSQL)
 DATABASES = {
     'default': {
