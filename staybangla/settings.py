@@ -74,13 +74,9 @@ CORS_ALLOWED_ORIGINS = [
 
 ]
 
-CORS_ALLOW_HEADERS = [
-    "content-type",
-    "authorization",
-    "accept",
-    "origin",
-    "x-requested-with",
-]
+CORS_ALLOW_CREDENTIALS = True
+CORS_ALLOW_ALL_ORIGINS = True
+
 
 # Database (PostgreSQL)
 DATABASES = {
