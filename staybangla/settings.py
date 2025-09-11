@@ -22,10 +22,10 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'drf_yasg',
     "debug_toolbar",
+    "corsheaders",
     'rest_framework',
     'djoser',
     'django_filters',
-    "corsheaders",
     # Local apps
     'booking',
     'reviews',
@@ -36,9 +36,9 @@ INSTALLED_APPS = [
 
 # Middleware
 MIDDLEWARE = [
+    "corsheaders.middleware.CorsMiddleware",
     "debug_toolbar.middleware.DebugToolbarMiddleware",
     'django.middleware.security.SecurityMiddleware',
-    "corsheaders.middleware.CorsMiddleware",
     "whitenoise.middleware.WhiteNoiseMiddleware",
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
@@ -67,13 +67,10 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'staybangla.wsgi.app'
 
-# CORS
 CORS_ALLOWED_ORIGINS = [
-    "http://localhost:5173",  # local vite
-    "http://127.0.0.1:5173",  # sometimes vite uses 127
-    "https://stay-bangla-mk4p.vercel.app",  # your deployed frontend
+    "http://localhost:5173",
+    "https://stay-bangla-mk4p.vercel.app",
 ]
-CORS_ALLOW_CREDENTIALS = True
 
 # Database (PostgreSQL)
 DATABASES = {
