@@ -10,10 +10,6 @@ SECRET_KEY = config('SECRET_KEY')
 DEBUG = False
 ALLOWED_HOSTS = ['.vercel.app', '127.0.0.1']
 
-# CORS
-CORS_ALLOWED_ORIGINS = [
-    "http://localhost:5173",
-]
 
 # Applications
 INSTALLED_APPS = [
@@ -25,12 +21,11 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'drf_yasg',
-    "corsheaders",
     "debug_toolbar",
     'rest_framework',
     'djoser',
     'django_filters',
-
+    "corsheaders",
     # Local apps
     'booking',
     'reviews',
@@ -41,11 +36,11 @@ INSTALLED_APPS = [
 
 # Middleware
 MIDDLEWARE = [
+    "corsheaders.middleware.CorsMiddleware",
     "debug_toolbar.middleware.DebugToolbarMiddleware",
     'django.middleware.security.SecurityMiddleware',
     "whitenoise.middleware.WhiteNoiseMiddleware",
     'django.contrib.sessions.middleware.SessionMiddleware',
-    "corsheaders.middleware.CorsMiddleware",
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
@@ -71,6 +66,12 @@ TEMPLATES = [
 ]
 
 WSGI_APPLICATION = 'staybangla.wsgi.app'
+
+# CORS
+CORS_ALLOWED_ORIGINS = [
+    "http://localhost:5173",
+]
+
 
 # Database (PostgreSQL)
 DATABASES = {
